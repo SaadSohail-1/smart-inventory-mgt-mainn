@@ -2,17 +2,22 @@ import { useEffect, useState } from 'react';
 import React from 'react'
 import ProductCard from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
-import { mergeSort } from '../utils/mergeSort';
+import { bubbleSort } from '../utils/Sort';
 
 function Products() {
     const [products, setProducts] = useState([]);
-    const [sortKey, setSortKey] = useState('');
+    const [sortOption, setSortOption] = useState("")
+    // const [sortKey, setSortKey] = useState('')
     const navigate = useNavigate();
+
+    
     
     const getProducts = async() =>{
         try{
             const res = await fetch("http://localhost:5000/api/products")
+            console.log("Fetch Status", res.status)
             const data = await res.json()
+            console.log("Fetched products: ", data)
             setProducts(data);
         } catch (err) {
             alert("Error fetching data");
@@ -41,10 +46,16 @@ function Products() {
     }, []);
 
     useEffect(() => {
-    if (sortKey) {
-      setProducts((prev) => mergeSort([...prev], sortKey));
-    }
-  }, [sortKey]);
+    // if (sortKey) {
+    //   setProducts((prev) => bubbleSort([...prev], sortKey));
+    // }
+    if(!sortOption) return;
+    const [key, order] = sortOption.split("-")
+    const sorted = bubbleSort([...products], key);
+    if (order === "desc") sorted.reverse()
+      setProducts(sorted);
+
+  }, [sortOption]);
 
 return (
     <div className="min-h-screen bg-gray-100 py-10 px-5">
@@ -53,14 +64,16 @@ return (
       </h2>
 
       {/* Sorting Dropdown */}
-      <div className="flex justify-center mb-10">
+     <div className="flex justify-center mb-10">
         <select
-          onChange={(e) => setSortKey(e.target.value)}
+          onChange={(e) => setSortOption(e.target.value)} // ✅ fix here
           className="p-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
         >
           <option value=""> Sort Products </option>
-          <option value="price">Sort by Price</option>
-          <option value="quantity">Sort by Stock</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="quantity-asc">Stock: Low → High</option>
+          <option value="quantity-desc">Stock: High → Low</option>
         </select>
       </div>
 

@@ -1,8 +1,7 @@
 import Product from "../models/productModel.js"; 
 import asyncHandler from "../utils/asynchandler.js";
-import { mergeSort } from "../utils/sort.js";
+import { bubbleSort } from "../utils/sort.js";
 import { binarySearchByKey } from "../utils/search.js";
-import { MinHeap } from "../utils/heap.js";
 import { logAction } from "../utils/logger.js";
 
 // in-memory structures
@@ -38,16 +37,16 @@ export const getAllProducts = asyncHandler(async (req, res) => {
   products.forEach(p => productHash.set(String(p._id), p));
 
   // Optional: sort before sending
-  const sorted = mergeSort([...products], "name");
+  const sorted = bubbleSort([...products], "name");
   res.json(sorted);
 });
 
 
-// Search by name (mergeSort + binary search)
+// Search by name (bubbleSort + binary search)
 export const searchByName = asyncHandler(async (req, res) => {
   await loadCacheIfEmpty();
   const { name } = req.params;
-  const sorted = mergeSort([...productArray], "name");
+  const sorted = bubbleSort([...productArray], "name");
   const found = binarySearchByKey(sorted, name, "name");
   if (!found) return res.status(404).json({ message: "Not found" });
   res.json(found);
@@ -86,18 +85,25 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   res.json({ message: "Deleted" });
 });
 
-// Low-stock top-k (heap)
+
+// not in use 
+// Low-stock top-k 
 export const lowStockTopK = asyncHandler(async (req, res) => {
   await loadCacheIfEmpty();
   const k = parseInt(req.query.k || "5", 10);
-  // use a min-heap based on quantity (smallest first)
-  const heap = new MinHeap((a,b) => a.quantity - b.quantity);
-  productArray.forEach(p => heap.push(p));
+  
+  // 1. Create a copy and sort by quantity (lowest first)
+  const sortedProducts = [...productArray].sort((a, b) => a.quantity - b.quantity);
+  
+  // 2. Create queue and enqueue all products
+  const queue = new Queue();
+  sortedProducts.forEach(p => queue.enqueue(p));
+  
+  // 3. Get first k items (lowest quantities)
   const result = [];
-  for (let i = 0; i < k; i++) {
-    const item = heap.pop();
-    if (!item) break;
-    result.push(item);
+  for (let i = 0; i < k && !queue.isEmpty(); i++) {
+    result.push(queue.dequeue());
   }
+  
   res.json(result);
 });

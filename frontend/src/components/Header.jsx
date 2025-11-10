@@ -31,10 +31,10 @@ function Header() {
             Products
           </Link>
           <Link
-            to="/"
+            to="/orders"
             className="hover:text-yellow-300 transition font-medium"
           >
-            Suppliers
+            Orders
           </Link>
           <Link
             to="/"

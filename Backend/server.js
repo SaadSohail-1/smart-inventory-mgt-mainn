@@ -16,18 +16,25 @@ app.use(cors());
 app.use(express.json());
 
 
+
+
+import orderRoutes from "./routes/orderRoutes.js";  
 import productRoutes from "./routes/productRoutes.js";
+import activityRoutes from './routes/activityRoutes.js';
+
 // import categoryRoutes from "./routes/categoryRoutes.js";
 // import supplierRoutes from "./routes/supplierRoutes.js";
 // import userRoutes from "./routes/userRoutes.js";
 // import orderRoutes from "./routes/orderRoutes.js";
 
 // Use Routes
+app.use("/api/orders", orderRoutes);  // Order routes
 app.use("/api/products", productRoutes);
+app.use('/api/activities', activityRoutes);
+
 // app.use("/api/categories", categoryRoutes);
 // app.use("/api/suppliers", supplierRoutes);
-// app.use("/api/users", userRoutes);
-// app.use("/api/orders", orderRoutes);
+  // app.use("/api/users", userRoutes);
 
 // Root route
 app.get("/", (req, res) => {

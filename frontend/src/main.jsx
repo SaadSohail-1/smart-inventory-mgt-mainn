@@ -9,6 +9,9 @@ import AddProductPage from './pages/AddProductPage.jsx'
 import { RouterProvider } from 'react-router-dom'
 import Products from './pages/Products.jsx'
 import UpdatePage from './pages/UpdatePage.jsx'
+import Orders from './pages/Orders.jsx'
+import OrderHistoryPage from './pages/OrderHistoryPage.jsx'
+import NewOrderForm from './components/NewOrderForm.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,6 +33,18 @@ const router = createBrowserRouter([
       {
         path: "/update/:id",
         element: <UpdatePage />
+      },
+      {
+        path: "/orders",
+        element:<Orders />
+      },
+      {
+        path: "/order-history",
+        element: <OrderHistoryPage />
+      },
+      {
+        path: "/new-order",
+        element: <NewOrderForm />
       }
       
     ]
