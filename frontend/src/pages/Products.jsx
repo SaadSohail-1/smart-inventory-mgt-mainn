@@ -10,7 +10,7 @@ function Products() {
     // const [sortKey, setSortKey] = useState('')
     const navigate = useNavigate();
 
-    
+    // const undoStack = useRef([])
     
     const getProducts = async() =>{
         try{
@@ -87,8 +87,8 @@ return (
             onUpdate={() => updateProduct(p._id)}
           />
         ))}
-      </div>
-    </div>
+      </div><></>
+    </div> 
   );
 }
 
