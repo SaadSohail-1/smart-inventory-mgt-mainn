@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { LinkedList } from "../utils/LinkedList";
 
 export default function Orders() {
   const [products, setProducts] = useState([]);
@@ -7,6 +8,10 @@ export default function Orders() {
   const [customerId, setCustomerId] = useState("");
   const [queue, setQueue] = useState([]);
   const [message, setMessage] = useState("");
+  // const [orderHistory, setOrderHistory] = useState([])
+  const orderHistoryLL = useRef(new LinkedList());
+  // const orderHistoryLL = new LinkedList() //cant use this because recreaeted on every render
+
 
   const API_BASE = "http://127.0.0.1:5000/api";
 
@@ -53,6 +58,10 @@ export default function Orders() {
         }),
       });
       const data = await res.json();
+      if(data.success){
+        // orderHistoryLL.push(data.order)
+        orderHistoryLL.current.push(data.order) //pushing to current because of useRef
+      }
       setMessage(data.message || "Order placed");
       fetchQueue();
     } catch (err) {
@@ -74,6 +83,8 @@ export default function Orders() {
   };
 
   return (
+
+    <div className="flex bg-white items-center justify-around">
     <div className="p-6 max-w-lg mx-auto bg-white shadow rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">Order Management</h2>
 
@@ -140,6 +151,19 @@ export default function Orders() {
           ))}
         </ul>
       )}
-    </div>
+      </div>
+      <div className="bg-white p-6 max-w-lg mx-aut shadow rounded-lg mr-auto">
+        <h1 className="font-bold text-center mb-5">History Nodes</h1>
+        {orderHistoryLL.current.head === null ? (
+          <div>No Items to Show</div>
+        ) : (
+          orderHistoryLL.current===null ? <div>No items to show</div> : orderHistoryLL.current.traverse().map((item, i) => (
+            <div key={i}>
+          {item.id} - {item.productName} ({item.quantity})
+        </div>
+         ))
+        )}
+     </div>
+      </div>
   );
 }
