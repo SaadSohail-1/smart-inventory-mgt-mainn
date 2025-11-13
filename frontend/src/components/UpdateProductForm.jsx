@@ -14,7 +14,7 @@ function UpdateProductForm() {
     })
 
     const handleChange = (e) => {
-        setProducts({ ...product, [e.target.name]: e.target.value})
+        setProducts({ ...product, [e.target.name]: e.target.value}) //name is field's name and value is input field's value
         
     }
     const handleSubmit = async (e) => {
