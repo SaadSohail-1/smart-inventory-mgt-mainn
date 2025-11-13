@@ -28,7 +28,7 @@ function Products() {
       const res = await fetch(`http://localhost:5000/api/products/search/${searchQuery}`);
       if (!res.ok) throw new Error("Not found");
       const data = await res.json();
-      setProducts([data]); // backend returns a single product object
+      setProducts([data]); // backend returns a single product object so we wrapped it in an array to map thru it later
     } catch (err) {
       alert("No product found");
       console.log(err);
